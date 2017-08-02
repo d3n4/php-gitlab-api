@@ -46,7 +46,7 @@ abstract class AbstractApi implements ApiInterface
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function get($path, array $parameters = array(), $requestHeaders = array())
+    public function get($path, array $parameters = array(), $requestHeaders = array())
     {
         $response = $this->client->getHttpClient()->get($path, $parameters, $requestHeaders);
 
@@ -60,7 +60,7 @@ abstract class AbstractApi implements ApiInterface
      * @param array $files
      * @return mixed
      */
-    protected function post($path, array $parameters = array(), $requestHeaders = array(), array $files = array())
+    public function post($path, array $parameters = array(), $requestHeaders = array(), array $files = array())
     {
         $response = $this->client->getHttpClient()->post($path, $parameters, $requestHeaders, $files);
 
@@ -73,7 +73,7 @@ abstract class AbstractApi implements ApiInterface
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function patch($path, array $parameters = array(), $requestHeaders = array())
+    public function patch($path, array $parameters = array(), $requestHeaders = array())
     {
         $response = $this->client->getHttpClient()->patch($path, $parameters, $requestHeaders);
 
@@ -86,7 +86,7 @@ abstract class AbstractApi implements ApiInterface
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function put($path, array $parameters = array(), $requestHeaders = array())
+    public function put($path, array $parameters = array(), $requestHeaders = array())
     {
         $response = $this->client->getHttpClient()->put($path, $parameters, $requestHeaders);
 
@@ -99,7 +99,7 @@ abstract class AbstractApi implements ApiInterface
      * @param array $requestHeaders
      * @return mixed
      */
-    protected function delete($path, array $parameters = array(), $requestHeaders = array())
+    public function delete($path, array $parameters = array(), $requestHeaders = array())
     {
         $response = $this->client->getHttpClient()->delete($path, $parameters, $requestHeaders);
 
