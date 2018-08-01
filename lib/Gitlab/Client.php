@@ -84,7 +84,8 @@ class Client
         }
 
         $httpClient = $httpClient ?: new Curl();
-        $httpClient->setTimeout($this->options['timeout']);
+        // todo: rewrite hotfix
+        /*$httpClient->setTimeout($this->options['timeout']);*/
         $httpClient->setVerifyPeer(false);
 
         $this->baseUrl     = $baseUrl;
