@@ -30,11 +30,11 @@ class Issues extends AbstractApi
     {
         if(is_array($issue_id)) {
             $issue_id = array_map(function($item) { return $this->encodePath($item); }, $issue_id);
-            $issue_id = 'iid[]=' . join('iid[]=', $issue_id);    
+            $issue_id = 'iids[]=' . join('iids[]=', $issue_id);
         } else {
-            $issue_id = 'iid[]=' . $this->encodePath($issue_id);    
+            $issue_id = 'iids[]=' . $this->encodePath($issue_id);
         }
-        
+
         return $this->get($this->getProjectPath($project_id, 'issues?'.$issue_id));
     }
 
