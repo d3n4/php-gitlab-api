@@ -3,13 +3,12 @@
 use Buzz\Client\ClientInterface;
 use Buzz\Listener\ListenerInterface;
 use Buzz\Message\Form\FormUpload;
-
 use Gitlab\Exception\ErrorException;
 use Gitlab\Exception\RuntimeException;
 use Gitlab\HttpClient\Listener\ErrorListener;
+use Gitlab\HttpClient\Message\FormRequest;
 use Gitlab\HttpClient\Message\Request;
 use Gitlab\HttpClient\Message\Response;
-use Gitlab\HttpClient\Message\FormRequest;
 
 /**
  * Performs requests on Gitlab API. API documentation should be self-explanatory.
@@ -107,6 +106,8 @@ class HttpClient implements HttpClientInterface
         if (0 < count($parameters)) {
             $path .= (false === strpos($path, '?') ? '?' : '&').http_build_query($parameters, '', '&');
         }
+
+        $path = preg_replace("/%5B([0-9]+)%5D\=/", "[]=", $path);
 
         return $this->request($path, array(), 'GET', $headers);
     }
