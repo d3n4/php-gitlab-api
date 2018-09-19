@@ -39,6 +39,8 @@ class Issue extends AbstractModel implements Noteable
         'updated_at',
         'created_at',
         'project',
+        'time_stats',
+        'due_date',
         'state'
     );
 
@@ -81,8 +83,7 @@ class Issue extends AbstractModel implements Noteable
     public function show()
     {
         $data = $this->api('issues')->show($this->project->id, $this->id);
-
-        return static::fromArray($this->getClient(), $this->project, $data);
+        return static::fromArray($this->getClient(), $this->project, isset($data[0]) ? $data[0] : []);
     }
 
     /**
