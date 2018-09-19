@@ -733,11 +733,12 @@ class Project extends AbstractModel
     /**
      * @param int $page
      * @param int $per_page
+     * @param array $params
      * @return Issue[]
      */
-    public function issues($page = 1, $per_page = Api::PER_PAGE)
+    public function issues($page = 1, $per_page = Api::PER_PAGE, $params = [])
     {
-        $data = $this->api('issues')->all($this->id, $page, $per_page);
+        $data = $this->api('issues')->all($this->id, $page, $per_page, $params);
 
         $issues = array();
         foreach ($data as $issue) {
