@@ -35,7 +35,7 @@ class Issues extends AbstractApi
             $issue_id = 'iid[]=' . $this->encodePath($issue_id);    
         }
         
-        return $this->get($this->getProjectPath($project_id, 'issues?.$issue_id));
+        return $this->get($this->getProjectPath($project_id, 'issues?'.$issue_id));
     }
 
     /**
