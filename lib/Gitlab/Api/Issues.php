@@ -28,7 +28,14 @@ class Issues extends AbstractApi
      */
     public function show($project_id, $issue_id)
     {
-        return $this->get($this->getProjectPath($project_id, 'issues?iid='.$this->encodePath($issue_id)));
+        if(is_array($issue_id)) {
+            $issue_id = array_map(function($item) { return $this->encodePath($item); }, $issue_id);
+            $issue_id = 'iid[]=' . join('iid[]=', $issue_id);    
+        } else {
+            $issue_id = 'iid[]=' . $this->encodePath($issue_id);    
+        }
+        
+        return $this->get($this->getProjectPath($project_id, 'issues?.$issue_id));
     }
 
     /**
