@@ -38,6 +38,14 @@ class Issues extends AbstractApi
         return $this->get($this->getProjectPath($project_id, 'issues?'.$issue_id));
     }
 
+    public function time_estimate($project_id, $issue_id, $duration = '1h30m') {
+        return $this->post($this->getProjectPath($project_id, 'issues/' . $this->encodePath($issue_id) . '/time_estimate?duration=' . $duration), []);
+    }
+
+    public function add_spent_time($project_id, $issue_id, $duration = '1h30m') {
+        return $this->post($this->getProjectPath($project_id, 'issues/' . $this->encodePath($issue_id) . '/add_spent_time?duration=' . $duration), []);
+    }
+
     /**
      * @param int $project_id
      * @param array $params
