@@ -21,7 +21,7 @@ abstract class AbstractApi implements ApiInterface
      *
      * @var Client
      */
-    protected $client;
+    public $client;
 
     /**
      * @param Client $client
@@ -111,7 +111,7 @@ abstract class AbstractApi implements ApiInterface
      * @param string $path
      * @return string
      */
-    protected function getProjectPath($id, $path)
+    public function getProjectPath($id, $path)
     {
         return 'projects/'.$this->encodePath($id).'/'.$path;
     }
@@ -120,7 +120,7 @@ abstract class AbstractApi implements ApiInterface
      * @param string $path
      * @return string
      */
-    protected function encodePath($path)
+    public function encodePath($path)
     {
         $path = rawurlencode($path);
 
