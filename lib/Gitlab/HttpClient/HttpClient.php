@@ -22,8 +22,8 @@ class HttpClient implements HttpClientInterface
      * @var array
      */
     protected $options = array(
-        'user_agent'  => 'php-gitlab-api (http://github.com/m4tthumphrey/php-gitlab-api)',
-        'timeout'     => 10,
+        'user_agent' => 'php-gitlab-api (http://github.com/m4tthumphrey/php-gitlab-api)',
+        'timeout' => 10,
     );
 
     /**
@@ -59,7 +59,7 @@ class HttpClient implements HttpClientInterface
     {
         $this->baseUrl = $baseUrl;
         $this->options = array_merge($this->options, $options);
-        $this->client  = $client;
+        $this->client = $client;
 
         $this->addListener(new ErrorListener($this->options));
 
@@ -104,7 +104,7 @@ class HttpClient implements HttpClientInterface
     public function get($path, array $parameters = array(), array $headers = array())
     {
         if (0 < count($parameters)) {
-            $path .= (false === strpos($path, '?') ? '?' : '&').http_build_query($parameters, '', '&');
+            $path .= (false === strpos($path, '?') ? '?' : '&') . http_build_query($parameters, '', '&');
         }
 
         $path = preg_replace("/%5B([0-9]+)%5D\=/", "[]=", $path);
@@ -149,37 +149,40 @@ class HttpClient implements HttpClientInterface
      */
     public function request($path, array $parameters = array(), $httpMethod = 'GET', array $headers = array(), array $files = array())
     {
-        $path = trim($this->baseUrl.$path, '/');
+        $ckey = md5(json_encode([$path, $parameters, $httpMethod, $headers]));
+        return \Cache::remember($ckey, 3600, function () use($ckey, $path, $parameters, $httpMethod, $headers, $files) {
+            $path = trim($this->baseUrl . $path, '/');
 
-        $request = $this->createRequest($httpMethod, $path, $parameters, $headers, $files);
+            $request = $this->createRequest($httpMethod, $path, $parameters, $headers, $files);
 
-        $hasListeners = 0 < count($this->listeners);
-        if ($hasListeners) {
-            foreach ($this->listeners as $listener) {
-                $listener->preSend($request);
+            $hasListeners = 0 < count($this->listeners);
+            if ($hasListeners) {
+                foreach ($this->listeners as $listener) {
+                    $listener->preSend($request);
+                }
             }
-        }
 
-        $response = new Response();
+            $response = new Response();
 
-        try {
-            $this->client->send($request, $response);
-        } catch (\LogicException $e) {
-            throw new ErrorException($e->getMessage());
-        } catch (\RuntimeException $e) {
-            throw new RuntimeException($e->getMessage());
-        }
-
-        $this->lastRequest  = $request;
-        $this->lastResponse = $response;
-
-        if ($hasListeners) {
-            foreach ($this->listeners as $listener) {
-                $listener->postSend($request, $response);
+            try {
+                $this->client->send($request, $response);
+            } catch (\LogicException $e) {
+                throw new ErrorException($e->getMessage());
+            } catch (\RuntimeException $e) {
+                throw new RuntimeException($e->getMessage());
             }
-        }
 
-        return $response;
+            $this->lastRequest = $request;
+            $this->lastResponse = $response;
+
+            if ($hasListeners) {
+                foreach ($this->listeners as $listener) {
+                    $listener->postSend($request, $response);
+                }
+            }
+
+            return $response;
+        });
     }
 
     /**
