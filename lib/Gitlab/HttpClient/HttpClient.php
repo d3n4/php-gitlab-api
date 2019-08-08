@@ -150,7 +150,8 @@ class HttpClient implements HttpClientInterface
     public function request($path, array $parameters = array(), $httpMethod = 'GET', array $headers = array(), array $files = array())
     {
         $ckey = md5(json_encode([$path, $parameters, $httpMethod, $headers]));
-        return \Cache::remember($ckey, 3600, function () use($ckey, $path, $parameters, $httpMethod, $headers, $files) {
+
+        $getData = function () use($ckey, $path, $parameters, $httpMethod, $headers, $files) {
             $path = trim($this->baseUrl . $path, '/');
 
             $request = $this->createRequest($httpMethod, $path, $parameters, $headers, $files);
@@ -182,7 +183,13 @@ class HttpClient implements HttpClientInterface
             }
 
             return $response;
-        });
+        };
+
+        if(\Illuminate\Support\Facades\Request::header('Cache-Control') === 'no-cache') {
+            return $getData();
+        }
+
+        return \Cache::remember($ckey, 120, $getData);
     }
 
     /**
