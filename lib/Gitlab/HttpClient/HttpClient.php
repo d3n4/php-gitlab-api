@@ -186,7 +186,9 @@ class HttpClient implements HttpClientInterface
         };
 
         if(\Illuminate\Support\Facades\Request::header('Cache-Control') === 'no-cache') {
-            return $getData();
+            $_data = $getData();
+            \Cache::put($ckey, $_data, 120);
+            return $_data;
         }
 
         return \Cache::remember($ckey, 120, $getData);
